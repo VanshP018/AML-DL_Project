@@ -1,6 +1,6 @@
 """Unit tests for Logistic Regression and SVM pipelines (Hardik).
 
-Both models use the continuous+one-hot MLP preprocessor and must expose
+Both models use the continuous + one-hot numeric preprocessor and must expose
 ``predict_proba`` (Platt scaling for SVM).  Each test mirrors the ensemble
 model tests added by Akshith so the test suite is symmetric.
 """
@@ -76,10 +76,10 @@ def test_lr_uses_regularisation(fold0):
     Xtr, ytr, Xva, _ = fold0
     from sklearn.linear_model import LogisticRegression
     from sklearn.pipeline import Pipeline
-    from src.features.preprocessing import build_mlp_preprocessor
-    pipe_strong = Pipeline([("preprocess", build_mlp_preprocessor()),
+    from src.features.preprocessing import build_numeric_preprocessor
+    pipe_strong = Pipeline([("preprocess", build_numeric_preprocessor()),
                              ("model", LogisticRegression(C=0.001, solver="lbfgs", max_iter=2000))])
-    pipe_weak = Pipeline([("preprocess", build_mlp_preprocessor()),
+    pipe_weak = Pipeline([("preprocess", build_numeric_preprocessor()),
                           ("model", LogisticRegression(C=100.0, solver="lbfgs", max_iter=2000))])
     p_strong = pipe_strong.fit(Xtr, ytr).predict_proba(Xva)
     p_weak = pipe_weak.fit(Xtr, ytr).predict_proba(Xva)
